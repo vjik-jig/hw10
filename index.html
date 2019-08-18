@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Task List</title>
+  </head>
+  <body>
+    <script>
+      var toDo = {
+        task: [
+          {
+            text: "lorem",
+            date: "13/08/2019",
+            isDone: false,
+            id: "12d21"
+          },
+          {
+            text: "Hello",
+            date: "12/08/2019",
+            isDone: false,
+            id: "13d31"
+          }
+        ],
+        createTask: function(str) {
+          if (!this.checkUnique(str)) {
+            this.task.push({
+              text: str,
+              date: this.getCurrentDate(),
+              isDone: false,
+              id: this.createId()
+            });
+          } else {
+            return false;
+          }
+        },
+        deleteTask: function(item, condition) {
+          condition = condition || false;
+          var indexOfTask = this.task.findIndex(function(value) {
+            return value.id === item;
+          });
+          if (condition === "confirm") {
+            this.task.splice(indexOfTask, 1);
+          }
+        },
+        updateTask: function(item, someText, condition) {
+          condition = condition || false;
+          var indexOfTask = this.task.findIndex(function(value) {
+            return value.id === item;
+          });
+          if (condition === "confirm") {
+            this.task[indexOfTask].text = someText;
+            this.task[indexOfTask].date = this.getCurrentDate();
+            this.task[indexOfTask].isDone = false;
+          }
+        },
+        checkDone: function(item) {
+          var indexOfTask = this.task.findIndex(function(value) {
+            return value.id === item;
+          });
+          this.task[indexOfTask].isDone = !this.task[indexOfTask].isDone;
+        },
+
+        countTasks: function() {
+          var allTasks = this.task.length;
+          var isDoneQuantity = this.task.filter(function(item) {
+            return item.isDone === true;
+          }).length;
+          return (
+            "All Tasks: " +
+            allTasks +
+            " / " +
+            "Done: " +
+            isDoneQuantity +
+            " / " +
+            "Need to do: " +
+            (allTasks - isDoneQuantity)
+          );
+        },
+
+        // передаем abc - сортировка по алфавиту, done - сортировка по выполненным
+        sortTasks: function(condition) {
+          if (condition === "done") {
+            this.task.sort(function(a, b) {
+              a = a.isDone;
+              b = b.isDone;
+              return a - b;
+            });
+          }
+          if (condition === "abc") {
+            this.task.sort(function(a, b) {
+              a = a.text.toLowerCase();
+              b = b.text.toLowerCase();
+              return a < b ? -1 : a > b ? 1 : 0;
+            });
+          }
+        },
+
+        // Вспомагательные методы
+
+        checkUnique: function(str) {
+          return this.task.some(function(item) {
+            return item.text === str;
+          });
+        },
+
+        createId: function() {
+          return (
+            "_" +
+            Math.random()
+              .toString(36)
+              .substr(2, 9)
+          );
+        },
+        getCurrentDate: function() {
+          var currentDay = new Date();
+          var dd = currentDay.getDate();
+          if (dd < 10) dd = "0" + dd;
+          var mm = currentDay.getMonth() + 1;
+          if (mm < 10) mm = "0" + mm;
+          var date = dd + "/" + mm + "/" + currentDay.getFullYear();
+          return date;
+        }
+      };
+
+      // Запрещаем внесение изменений в методы
+
+      Object.defineProperties(toDo, {
+        createId: {
+          writable: false,
+          configurable: false
+        },
+        getCurrentDate: {
+          writable: false,
+          configurable: false
+        },
+        checkUnique: {
+          writable: false,
+          configurable: false
+        },
+        createTask: {
+          writable: false,
+          configurable: false
+        },
+        deleteTask: {
+          writable: false,
+          configurable: false
+        },
+        updateTask: {
+          writable: false,
+          configurable: false
+        },
+        checkDone: {
+          writable: false,
+          configurable: false
+        },
+        countTasks: {
+          writable: false,
+          configurable: false
+        },
+        sort: {
+          writable: false,
+          configurable: false
+        }
+      });
+    </script>
+  </body>
+</html>
